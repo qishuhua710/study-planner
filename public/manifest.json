@@ -1,0 +1,27 @@
+{
+  "name": "学习日程管理",
+  "short_name": "学习日程",
+  "description": "个性化学习日程管理 PWA — 日历 + 任务 + 计时器 + 学习辅助",
+  "start_url": "/calendar",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "orientation": "any",
+  "lang": "zh-CN",
+  "categories": ["productivity", "education"],
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

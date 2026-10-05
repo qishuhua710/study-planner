@@ -1,0 +1,168 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ====== C 配色：米白墨绿（自然高级风）====== */
+@layer base {
+  :root {
+    /* 背景：暖米白 #F6F5F0 */
+    --background: 60 25% 95%;
+    --foreground: 40 10% 10%;
+    /* 卡片：纯白 */
+    --card: 0 0% 100%;
+    --card-foreground: 40 10% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 40 10% 10%;
+    /* 主色：墨绿 #2D5A3D */
+    --primary: 136 33% 26%;
+    --primary-foreground: 60 20% 96%;
+    /* 次级：浅米灰 */
+    --secondary: 50 15% 92%;
+    --secondary-foreground: 40 10% 20%;
+    /* 静音：暖灰 */
+    --muted: 50 12% 93%;
+    --muted-foreground: 40 6% 45%;
+    /* 强调：鼠尾草绿 #7C8471 */
+    --accent: 84 8% 48%;
+    --accent-foreground: 40 10% 96%;
+    /* 危险：陶土红棕 */
+    --destructive: 12 45% 45%;
+    --destructive-foreground: 40 10% 98%;
+    /* 边框：暖浅灰 #E8E5DD */
+    --border: 40 18% 89%;
+    --input: 40 18% 89%;
+    --ring: 136 33% 26%;
+    --radius: 0.625rem;
+  }
+
+  .dark {
+    /* 深色：墨绿黑底 #1A2420 */
+    --background: 140 17% 12%;
+    --foreground: 40 15% 89%;
+    --card: 145 14% 15%;
+    --card-foreground: 40 15% 89%;
+    --popover: 145 14% 15%;
+    --popover-foreground: 40 15% 89%;
+    /* 主色：亮墨绿 #5B8A6A */
+    --primary: 138 21% 45%;
+    --primary-foreground: 140 17% 10%;
+    --secondary: 140 10% 20%;
+    --secondary-foreground: 40 15% 89%;
+    --muted: 140 10% 18%;
+    --muted-foreground: 40 8% 60%;
+    --accent: 84 10% 42%;
+    --accent-foreground: 40 15% 89%;
+    --destructive: 12 40% 50%;
+    --destructive-foreground: 40 15% 95%;
+    --border: 140 10% 22%;
+    --input: 140 10% 22%;
+    --ring: 138 21% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    font-family: -apple-system, "SF Pro Text", "PingFang SC",
+      "Helvetica Neue", system-ui, sans-serif;
+  }
+}
+
+/* ====== 硬编码十六进制色在暗色模式下的对比度调整 ======
+ * 项目用了不少 #A45C3D / #5C8A6B / #8B7355 / #7C8471 等自然系色，
+ * 浅色下表现很好，暗色下饱和度需要降下来，否则刺眼。
+ */
+@layer utilities {
+  /* 暗色模式下：陶土橙（重要/今日到期）降饱和 */
+  .dark .text-\[\#A45C3D\] {
+    color: #d49071 !important;
+  }
+  .dark .bg-\[\#A45C3D\] {
+    background-color: #c98260 !important;
+  }
+  /* 警示红（逾期/删除） */
+  .dark .text-\[\#B5453B\] {
+    color: #e58a82 !important;
+  }
+  .dark .bg-\[\#B5453B\] {
+    background-color: #c45a52 !important;
+  }
+  /* 鼠尾草绿 */
+  .dark .text-\[\#5C8A6B\] {
+    color: #82b295 !important;
+  }
+  .dark .bg-\[\#5C8A6B\] {
+    background-color: #5b8a6b !important;
+  }
+  /* 棕褐（时间块） */
+  .dark .text-\[\#8B7355\] {
+    color: #b89a78 !important;
+  }
+  .dark .bg-\[\#8B7355\] {
+    background-color: #8b7355 !important;
+  }
+  /* 鼠尾草灰 */
+  .dark .text-\[\#7C8471\] {
+    color: #a8aea0 !important;
+  }
+  .dark .text-\[\#8B7E6B\] {
+    color: #b6aa90 !important;
+  }
+  /* 暗色模式下：header 背景不要纯透，需要半透明暗色 */
+  .dark header.sticky {
+    background-color: hsl(var(--background) / 0.85);
+  }
+
+  /* 暗色模式下的滚动条 */
+  .dark ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .dark ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 5px;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+}
+
+/* ====== 浅色滚动条 ====== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* ====== 长文/法律文档样式 ====== */
+.prose-container h1 {
+  letter-spacing: -0.02em;
+}
+.prose-container h2 {
+  margin-top: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+.prose-container ul {
+  margin: 0.5rem 0;
+}
+.prose-container strong {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+}

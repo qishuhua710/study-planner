@@ -1,0 +1,17 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "默认权限：核心 + 开机自启动 + 通知 + 全局快捷键 + 窗口管理",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:window:default",
+    "core:window:allow-show",
+    "core:window:allow-hide",
+    "core:window:allow-set-focus",
+    "core:window:allow-close",
+    "autostart:default",
+    "notification:default",
+    "global-shortcut:default"
+  ]
+}
