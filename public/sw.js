@@ -13,14 +13,14 @@ const CACHE_VERSION = "v1";
 const STATIC_CACHE = `study-planner-static-${CACHE_VERSION}`;
 const PAGES_CACHE = `study-planner-pages-${CACHE_VERSION}`;
 
-// 预缓存关键资源
+// 预缓存关键资源（next.config.mjs 启用了 trailingSlash，所以全部带 /）
 const PRECACHE_URLS = [
   "/",
-  "/calendar",
-  "/tasks",
-  "/schedule",
-  "/timer",
-  "/settings",
+  "/calendar/",
+  "/tasks/",
+  "/schedule/",
+  "/timer/",
+  "/settings/",
   "/manifest.json",
   "/icons/icon.svg",
 ];
