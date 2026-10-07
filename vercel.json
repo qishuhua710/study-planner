@@ -3,10 +3,24 @@
   "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm build",
   "outputDirectory": "out",
-  "framework": "nextjs",
-  "git": {
-    "deploymentEnabled": {
-      "main": true
-    }
-  }
+  "framework": null,
+  "cleanUrls": false,
+  "trailingSlash": true,
+  "rewrites": [
+    { "source": "/calendar", "destination": "/calendar/index.html" },
+    { "source": "/tasks", "destination": "/tasks/index.html" },
+    { "source": "/schedule", "destination": "/schedule/index.html" },
+    { "source": "/timer", "destination": "/timer/index.html" },
+    { "source": "/settings", "destination": "/settings/index.html" },
+    { "source": "/legal/about", "destination": "/legal/about/index.html" },
+    { "source": "/legal/terms", "destination": "/legal/terms/index.html" },
+    { "source": "/legal/privacy", "destination": "/legal/privacy/index.html" },
+    { "source": "/legal/ai-disclosure", "destination": "/legal/ai-disclosure/index.html" },
+    { "source": "/legal/disclaimer", "destination": "/legal/disclaimer/index.html" },
+    { "source": "/login", "destination": "/login/index.html" },
+    { "source": "/register", "destination": "/register/index.html" },
+    { "source": "/forgot-password", "destination": "/forgot-password/index.html" },
+    { "source": "/flashcards", "destination": "/flashcards/index.html" },
+    { "source": "/reader", "destination": "/reader/index.html" }
+  ]
 }
