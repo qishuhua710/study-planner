@@ -1,0 +1,4 @@
+# Vercel 多服务检测时排除的目录
+# src-tauri 是 Tauri 桌面应用，不能也不应该在 Vercel 上编译
+src-tauri
+docs
