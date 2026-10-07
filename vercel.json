@@ -1,11 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
+  "framework": null,
+  "outputDirectory": "out",
   "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm build",
-  "outputDirectory": "out",
-  "cleanUrls": false,
   "trailingSlash": true,
+  "cleanUrls": false,
   "rewrites": [
     { "source": "/calendar", "destination": "/calendar/index.html" },
     { "source": "/tasks", "destination": "/tasks/index.html" },
