@@ -6,48 +6,68 @@
  * - 监听 Supabase auth state
  * - 提供 user / loading / isAuthenticated
  * - 初次加载时主动拉一次 session
+ * - 异步初始化 supabase-js，不阻塞首屏
  */
 
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { getSupabase } from "@/lib/supabase";
+import { ensureSupabase } from "@/lib/supabase";
 
 interface AuthState {
   user: User | null;
   loading: boolean;
+  /** 环境变量未配置时为 true，提示用户 */
+  configMissing: boolean;
 }
 
 export function useCurrentUser(): AuthState {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [configMissing, setConfigMissing] = useState(false);
 
   useEffect(() => {
-    const supabase = getSupabase();
-    if (!supabase) {
-      setLoading(false);
-      return;
-    }
+    let mounted = true;
+    let unsubscribe: (() => void) | null = null;
 
-    // 初次加载：拉当前 session
-    supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null);
-      setLoading(false);
-    });
+    (async () => {
+      try {
+        const supabase = await ensureSupabase();
+        if (!mounted) return;
 
-    // 订阅 auth state 变化
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+        // 初次加载：拉当前 session
+        const { data } = await supabase.auth.getSession();
+        if (!mounted) return;
+        setUser(data.session?.user ?? null);
+        setLoading(false);
+
+        // 订阅 auth state 变化
+        const {
+          data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+          if (!mounted) return;
+          setUser(session?.user ?? null);
+          setLoading(false);
+        });
+        unsubscribe = () => subscription.unsubscribe();
+      } catch (e) {
+        if (!mounted) return;
+        const msg = (e as Error).message || "";
+        if (msg.includes("环境变量未配置")) {
+          setConfigMissing(true);
+        } else {
+          console.error("[useCurrentUser]", e);
+        }
+        setLoading(false);
+      }
+    })();
 
     return () => {
-      subscription.unsubscribe();
+      mounted = false;
+      unsubscribe?.();
     };
   }, []);
 
-  return { user, loading };
+  return { user, loading, configMissing };
 }
 
 /**

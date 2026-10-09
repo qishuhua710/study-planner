@@ -7,7 +7,7 @@
  * - resetPassword: 发送找回密码邮件
  */
 
-import { getSupabaseOrThrow } from "./supabase";
+import { ensureSupabase } from "./supabase";
 
 export interface AuthResult {
   ok: boolean;
@@ -24,7 +24,7 @@ export async function signUp(
   password: string,
 ): Promise<AuthResult> {
   try {
-    const supabase = getSupabaseOrThrow();
+    const supabase = await ensureSupabase();
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -53,7 +53,7 @@ export async function signIn(
   password: string,
 ): Promise<AuthResult> {
   try {
-    const supabase = getSupabaseOrThrow();
+    const supabase = await ensureSupabase();
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -72,7 +72,7 @@ export async function signIn(
  */
 export async function signOut(): Promise<AuthResult> {
   try {
-    const supabase = getSupabaseOrThrow();
+    const supabase = await ensureSupabase();
     const { error } = await supabase.auth.signOut();
     if (error) {
       return { ok: false, error: error.message };
@@ -85,12 +85,10 @@ export async function signOut(): Promise<AuthResult> {
 
 /**
  * 发送找回密码邮件
- * Supabase 会发送一封带 reset link 的邮件，用户点击后跳转到配置的 redirect_to
- * （需要在 Supabase 控制台 Auth → URL Configuration 设置 redirect URL）
  */
 export async function resetPassword(email: string): Promise<AuthResult> {
   try {
-    const supabase = getSupabaseOrThrow();
+    const supabase = await ensureSupabase();
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/login`,
     });
@@ -104,11 +102,11 @@ export async function resetPassword(email: string): Promise<AuthResult> {
 }
 
 /**
- * 更新密码（用户在点击邮件 → 重定向回站点时调用）
+ * 更新密码
  */
 export async function updatePassword(newPassword: string): Promise<AuthResult> {
   try {
-    const supabase = getSupabaseOrThrow();
+    const supabase = await ensureSupabase();
     const { error } = await supabase.auth.updateUser({
       password: newPassword,
     });

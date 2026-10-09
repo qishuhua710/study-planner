@@ -12,7 +12,7 @@
  * - 匿名：localStorage['<key>']
  */
 
-import { getSupabase } from "./supabase";
+import { ensureSupabase } from "./supabase";
 
 const ACTIVE_USER_KEY = "study-planner:active-user-id";
 let currentUserId: string | null = null;
@@ -21,14 +21,18 @@ let initialized = false;
 export function initUserStorage(): void {
   if (typeof window === "undefined" || initialized) return;
   initialized = true;
-  const supabase = getSupabase();
-  if (!supabase) return;
-  supabase.auth.getSession().then(({ data }) => {
-    setCurrentUserId(data.session?.user?.id ?? null);
-  });
-  supabase.auth.onAuthStateChange((_event, session) => {
-    setCurrentUserId(session?.user?.id ?? null);
-  });
+  ensureSupabase()
+    .then((supabase) => {
+      supabase.auth.getSession().then(({ data }) => {
+        setCurrentUserId(data.session?.user?.id ?? null);
+      });
+      supabase.auth.onAuthStateChange((_event, session) => {
+        setCurrentUserId(session?.user?.id ?? null);
+      });
+    })
+    .catch(() => {
+      // 环境变量未配置，未登录模式也能用
+    });
 }
 
 export function setCurrentUserId(userId: string | null): void {
