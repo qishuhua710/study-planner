@@ -4,7 +4,6 @@
   "outputDirectory": "out",
   "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm build",
-  "trailingSlash": true,
   "cleanUrls": false,
   "headers": [
     {
