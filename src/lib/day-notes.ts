@@ -4,6 +4,8 @@
  * Phase 3：迁移到 Supabase day_notes 表
  */
 
+import { userStorage } from "./user-storage";
+
 export interface DayNote {
   date: string; // "yyyy-MM-dd" 作为主键
   note: string; // 备注文本（可空字符串 = 无备注）
@@ -16,7 +18,7 @@ const KEY = "study-planner:day-notes";
 function readAll(): Record<string, DayNote> {
   if (typeof window === "undefined") return {};
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = userStorage.getItem(KEY);
     return raw ? (JSON.parse(raw) as Record<string, DayNote>) : {};
   } catch {
     return {};
@@ -25,7 +27,7 @@ function readAll(): Record<string, DayNote> {
 
 function writeAll(map: Record<string, DayNote>): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(KEY, JSON.stringify(map));
+  userStorage.setItem(KEY, JSON.stringify(map));
 }
 
 /** 获取某天的备注记录（没有则返回空对象，不创建） */

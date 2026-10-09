@@ -5,6 +5,7 @@
  */
 
 import { mockTasks, type Priority, type Status } from "./mock-data";
+import { userStorage, notifyDataChanged } from "./user-storage";
 
 export interface Task {
   id: string;
@@ -26,7 +27,7 @@ const KEY = "study-planner:tasks";
 function readAll(): Task[] {
   if (typeof window === "undefined") return toTasks(mockTasks);
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = userStorage.getItem(KEY);
     if (!raw) return toTasks(mockTasks);
     return JSON.parse(raw) as Task[];
   } catch {
@@ -57,8 +58,8 @@ function toTasks(
 
 function writeAll(list: Task[]): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(KEY, JSON.stringify(list));
-  window.dispatchEvent(new Event("study-planner:data-changed"));
+  userStorage.setItem(KEY, JSON.stringify(list));
+  notifyDataChanged();
 }
 
 export function getTasks(): Task[] {

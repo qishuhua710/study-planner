@@ -1,13 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Calendar, CheckSquare, Timer, BookOpen, Settings } from "lucide-react";
+import {
+  Calendar,
+  CheckSquare,
+  Timer,
+  BookOpen,
+  Settings,
+  LogOut,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getTasks } from "@/lib/tasks";
 import { getTimeBlocksForDate } from "@/lib/time-blocks";
 import { runDueNotifier } from "@/lib/due-notifier";
+import { initUserStorage } from "@/lib/user-storage";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { signOut } from "@/lib/auth";
+import { AuthGuard } from "@/components/auth-guard";
+import { toast } from "sonner";
 import { format } from "date-fns";
 
 const navItems = [
@@ -28,6 +40,24 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user } = useCurrentUser();
+
+  // 初始化用户隔离存储（监听 Supabase auth state）
+  useEffect(() => {
+    initUserStorage();
+  }, []);
+
+  async function handleSignOut() {
+    const result = await signOut();
+    if (result.ok) {
+      toast.success("已退出登录");
+      router.push("/login");
+    } else {
+      toast.error("退出失败", { description: result.error });
+    }
+  }
+
   // 避免 SSR/CSR 不一致：服务端 pathname 可能为 null/不同，挂载后再判定
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -102,9 +132,10 @@ export default function MainLayout({
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* 顶栏：无边框，仅 backdrop-blur + 极浅阴影 */}
-      <header className="sticky top-0 z-40 bg-background/70 backdrop-blur-lg">
+    <AuthGuard>
+      <div className="min-h-screen bg-background">
+        {/* 顶栏：无边框，仅 backdrop-blur + 极浅阴影 */}
+        <header className="sticky top-0 z-40 bg-background/70 backdrop-blur-lg">
         <nav className="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4 sm:px-6">
           {/* 品牌：绿点 + 字标 */}
           <Link
@@ -157,6 +188,19 @@ export default function MainLayout({
                 </Link>
               );
             })}
+            {/* 退出登录按钮 */}
+            {user && (
+              <button
+                type="button"
+                onClick={handleSignOut}
+                aria-label="退出登录"
+                title={`退出登录 (${user.email})`}
+                className="ml-1 inline-flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-accent/50 hover:text-foreground sm:px-3.5"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden md:inline">退出</span>
+              </button>
+            )}
           </div>
         </nav>
       </header>
@@ -207,6 +251,7 @@ export default function MainLayout({
           </div>
         </footer>
       )}
-    </div>
+      </div>
+    </AuthGuard>
   );
 }

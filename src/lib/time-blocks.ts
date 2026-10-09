@@ -4,6 +4,8 @@
  * Phase 3：迁移到 Supabase time_blocks 表
  */
 
+import { userStorage, notifyDataChanged } from "./user-storage";
+
 export interface TimeBlock {
   id: string;
   title: string;
@@ -19,7 +21,7 @@ const KEY = "study-planner:time-blocks";
 function readAll(): TimeBlock[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = userStorage.getItem(KEY);
     return raw ? (JSON.parse(raw) as TimeBlock[]) : [];
   } catch {
     return [];
@@ -28,8 +30,8 @@ function readAll(): TimeBlock[] {
 
 function writeAll(list: TimeBlock[]): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(KEY, JSON.stringify(list));
-  window.dispatchEvent(new Event("study-planner:data-changed"));
+  userStorage.setItem(KEY, JSON.stringify(list));
+  notifyDataChanged();
 }
 
 export function getTimeBlocks(): TimeBlock[] {

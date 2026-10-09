@@ -6,6 +6,8 @@
  * 每个用户自建分类（如"数学"、"英语"、"项目代码"），可带颜色用于视觉区分
  */
 
+import { userStorage } from "./user-storage";
+
 export interface Category {
   id: string;
   name: string;
@@ -38,7 +40,7 @@ const seedCategories: Category[] = [
 function readAll(): Category[] {
   if (typeof window === "undefined") return seedCategories;
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = userStorage.getItem(KEY);
     if (!raw) return seedCategories;
     return JSON.parse(raw) as Category[];
   } catch {
@@ -48,7 +50,7 @@ function readAll(): Category[] {
 
 function writeAll(list: Category[]): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(KEY, JSON.stringify(list));
+  userStorage.setItem(KEY, JSON.stringify(list));
 }
 
 export function getCategories(): Category[] {

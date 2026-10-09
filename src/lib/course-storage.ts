@@ -4,6 +4,8 @@
  * Phase 3：迁移到 Supabase（courses / course_sessions / holidays 三表）
  */
 
+import { userStorage } from "./user-storage";
+
 // ==================== 本地 Mock 数据（避免与 mock-data 形成循环引用）====================
 
 const mockCourses: Course[] = [
@@ -103,7 +105,7 @@ const KEYS = {
 function read<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
   try {
-    const raw = localStorage.getItem(key);
+    const raw = userStorage.getItem(key);
     if (!raw) return fallback;
     return JSON.parse(raw) as T;
   } catch {
@@ -113,7 +115,7 @@ function read<T>(key: string, fallback: T): T {
 
 function write<T>(key: string, value: T): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(key, JSON.stringify(value));
+  userStorage.setItem(key, JSON.stringify(value));
 }
 
 // ==================== 课程 CRUD ====================

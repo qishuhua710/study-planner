@@ -32,6 +32,7 @@ import {
   setCategories,
   type Category,
 } from "./categories";
+import { userStorage } from "./user-storage";
 
 export const BACKUP_VERSION = 2;
 
@@ -120,7 +121,8 @@ export function importAllData(payload: BackupPayload): void {
   }
 }
 
-// 所有数据持久化的 localStorage key（清空数据用）
+// 所有数据持久化的 base localStorage key（清空数据用）
+// 实际存储时会按 userId 隔离（在 user-storage.ts 里加后缀）
 export const STORAGE_KEYS = [
   "study-planner:tasks",
   "study-planner:time-blocks",
@@ -133,14 +135,15 @@ export const STORAGE_KEYS = [
 ] as const;
 
 /**
- * 清空所有用户数据（恢复首次启动的种子状态）
- * - 清除 8 个 localStorage key
+ * 清空当前用户的所有数据（恢复首次启动的种子状态）
+ * - 清除当前用户的 8 个 localStorage key
  * - 触发 storage 事件让其他打开的标签页同步刷新
  */
 export function clearAllData(): void {
   if (typeof window === "undefined") return;
+  // 通过 userStorage.removeItem 删除（自动按当前 user 隔离）
   for (const k of STORAGE_KEYS) {
-    localStorage.removeItem(k);
+    userStorage.removeItem(k);
   }
   // 通知其他标签页
   window.dispatchEvent(new Event("storage"));
