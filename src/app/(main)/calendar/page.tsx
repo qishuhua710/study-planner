@@ -266,6 +266,7 @@ export default function CalendarPage() {
   const [aiReasoning, setAiReasoning] = useState<string>("");
   const [aiLoading, setAiLoading] = useState(false);
   const [useAi, setUseAi] = useState(false);
+  const [showRationale, setShowRationale] = useState(false);
 
   // 智能排程建议
   const suggestions: SuggestedBlock[] = useMemo(() => {
@@ -1046,9 +1047,20 @@ export default function CalendarPage() {
           {/* 智能排程建议 */}
           {showSuggestion && (
             <div className="mb-4 rounded-xl border border-primary/30 bg-primary/5 p-3">
-              <div className="mb-2 flex items-center gap-1.5 text-xs font-medium text-primary">
-                <Sparkles className="h-3.5 w-3.5" />{" "}
-                {useAi ? "AI 智能排程建议" : "本地规则排程建议"}
+              <div className="mb-2 flex items-center justify-between gap-1.5 text-xs font-medium text-primary">
+                <div className="flex items-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5" />{" "}
+                  {useAi ? "AI 智能排程建议" : "本地规则排程建议"}
+                </div>
+                {useAi && aiSuggestions.some((s) => s.rationale) && (
+                  <button
+                    onClick={() => setShowRationale((v) => !v)}
+                    className="rounded-full px-2 py-0.5 text-[11px] font-normal text-primary/70 hover:bg-primary/10"
+                    title="显示/隐藏 AI 为每个时间段安排的解释"
+                  >
+                    {showRationale ? "隐藏解释" : "查看解释"}
+                  </button>
+                )}
               </div>
               {aiReasoning && (
                 <p className="mb-2 rounded bg-background/60 px-2 py-1.5 text-[11px] text-foreground/80">
@@ -1062,14 +1074,21 @@ export default function CalendarPage() {
               ) : (
                 <div className="space-y-1">
                   {(useAi ? aiSuggestions : suggestions).map((s, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs">
-                      <span className="font-mono text-muted-foreground">
-                        {s.startTime}-{s.endTime}
-                      </span>
-                      <span className="flex-1 truncate">{s.taskTitle}</span>
-                      <span className="text-muted-foreground/60">
-                        {s.duration}分
-                      </span>
+                    <div key={i} className="space-y-0.5">
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className="font-mono text-muted-foreground">
+                          {s.startTime}-{s.endTime}
+                        </span>
+                        <span className="flex-1 truncate">{s.taskTitle}</span>
+                        <span className="text-muted-foreground/60">
+                          {s.duration}分
+                        </span>
+                      </div>
+                      {showRationale && useAi && s.rationale && (
+                        <p className="ml-1 pl-3 text-[11px] italic text-muted-foreground/80">
+                          💡 {s.rationale}
+                        </p>
+                      )}
                     </div>
                   ))}
                 </div>

@@ -43,6 +43,13 @@ self.addEventListener("install", (event) => {
   );
 });
 
+// 监听客户端消息：SKIP_WAITING 触发激活
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {

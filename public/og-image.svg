@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- 背景渐变：自然系绿 -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5C8A6B" />
+      <stop offset="100%" stop-color="#3F5E48" />
+    </linearGradient>
+    <linearGradient id="card" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.85" />
+    </linearGradient>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="1200" height="630" fill="url(#bg)" />
+
+  <!-- 装饰：左上角光晕 -->
+  <circle cx="100" cy="100" r="200" fill="#ffffff" fill-opacity="0.08" />
+  <circle cx="1100" cy="550" r="250" fill="#ffffff" fill-opacity="0.06" />
+
+  <!-- 主卡片 -->
+  <rect x="80" y="120" width="1040" height="390" rx="24" fill="url(#card)" />
+
+  <!-- 品牌标识 -->
+  <g transform="translate(140, 180)">
+    <circle cx="20" cy="20" r="20" fill="#5C8A6B" />
+    <text x="60" y="32" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="28" font-weight="600" fill="#1F2937">学习日程</text>
+  </g>
+
+  <!-- 主标题 -->
+  <text x="140" y="300" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="68" font-weight="700" fill="#1F2937">学习日程管理</text>
+
+  <!-- 副标题 -->
+  <text x="140" y="360" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="28" font-weight="400" fill="#6B7280">日历 · 任务 · 计时器 · 课程表</text>
+
+  <!-- 标签 -->
+  <g transform="translate(140, 410)">
+    <rect width="100" height="38" rx="19" fill="#5C8A6B" fill-opacity="0.15" />
+    <text x="50" y="25" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="500" fill="#3F5E48">PWA</text>
+
+    <rect x="115" width="100" height="38" rx="19" fill="#5C8A6B" fill-opacity="0.15" />
+    <text x="165" y="25" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="500" fill="#3F5E48">离线可用</text>
+
+    <rect x="230" width="100" height="38" rx="19" fill="#5C8A6B" fill-opacity="0.15" />
+    <text x="280" y="25" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="500" fill="#3F5E48">AI 排程</text>
+
+    <rect x="345" width="100" height="38" rx="19" fill="#5C8A6B" fill-opacity="0.15" />
+    <text x="395" y="25" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="500" fill="#3F5E48">多账号</text>
+  </g>
+
+  <!-- 底部域名 -->
+  <text x="140" y="478" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="20" font-weight="400" fill="#9CA3AF">study-planner-nu-three.vercel.app</text>
+</svg>

@@ -19,6 +19,7 @@ import { initUserStorage } from "@/lib/user-storage";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { signOut } from "@/lib/auth";
 import { AuthGuard } from "@/components/auth-guard";
+import { ServiceWorkerUpdatePrompt } from "@/components/sw-update-prompt";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
@@ -111,32 +112,16 @@ export default function MainLayout({
   }, []);
 
   // 注册 PWA Service Worker（仅生产 + 支持的浏览器）
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (!("serviceWorker" in navigator)) return;
-    // 开发模式下 SW 会干扰 HMR，跳过
-    if (process.env.NODE_ENV !== "production") return;
-    const onLoad = () => {
-      navigator.serviceWorker
-        .register("/sw.js", { scope: "/" })
-        .then((reg) => {
-          // 检查更新
-          reg.update().catch(() => {});
-        })
-        .catch(() => {
-          // 注册失败静默（隐私模式或权限被拒）
-        });
-    };
-    window.addEventListener("load", onLoad);
-    return () => window.removeEventListener("load", onLoad);
-  }, []);
+  // 实际逻辑已移至 ServiceWorkerUpdatePrompt 组件（支持更新提示）
+  // 这里只保留 cleanup
 
   return (
     <AuthGuard>
+      <ServiceWorkerUpdatePrompt />
       <div className="min-h-screen bg-background">
         {/* 顶栏：无边框，仅 backdrop-blur + 极浅阴影 */}
         <header className="sticky top-0 z-40 bg-background/70 backdrop-blur-lg">
-        <nav className="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4 sm:px-6">
+          <nav className="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4 sm:px-6">
           {/* 品牌：绿点 + 字标 */}
           <Link
             href="/calendar"

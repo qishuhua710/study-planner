@@ -28,6 +28,8 @@ export interface SuggestedBlock {
   startTime: string; // "HH:mm"
   endTime: string; // "HH:mm"
   duration: number; // 分钟
+  /** AI 排程的"为什么放这里"解释（仅 AI 模式有） */
+  rationale?: string;
 }
 
 /** 一天内的时段（分钟数） */

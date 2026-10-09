@@ -69,6 +69,12 @@
     font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
     font-family: -apple-system, "SF Pro Text", "PingFang SC",
       "Helvetica Neue", system-ui, sans-serif;
+    /* 暗色模式切换时给个 200ms 平滑过渡 */
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+  /* 关闭某些元素的过渡，避免动画过于花哨 */
+  button, a, input, select, textarea {
+    transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
   }
 }
 
