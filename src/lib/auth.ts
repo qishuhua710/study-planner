@@ -25,10 +25,12 @@ export async function signUp(
 ): Promise<AuthResult> {
   try {
     const supabase = await ensureSupabase();
+    console.log("[signUp] 开始注册", { email, url: process.env.NEXT_PUBLIC_SUPABASE_URL });
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
+    console.log("[signUp] 返回结果", { hasError: !!error, errorMsg: error?.message, hasSession: !!data?.session, hasUser: !!data?.user });
     if (error) {
       return { ok: false, error: error.message };
     }
