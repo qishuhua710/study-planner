@@ -28,7 +28,18 @@ const PRECACHE_URLS = [
   "/icons/icon.svg",
 ];
 
+// 开发模式保护：localhost 不预缓存
+const IS_DEV =
+  self.location.hostname === "localhost" ||
+  self.location.hostname === "127.0.0.1" ||
+  self.location.hostname.includes("192.168.");
+
 self.addEventListener("install", (event) => {
+  if (IS_DEV) {
+    // 开发模式直接激活，不缓存
+    event.waitUntil(self.skipWaiting());
+    return;
+  }
   event.waitUntil(
     (async () => {
       const cache = await caches.open(PAGES_CACHE);

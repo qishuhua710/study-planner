@@ -16,7 +16,7 @@
  */
 
 // 你的真实 Supabase 项目 URL（不要带尾部 /）
-const SUPABASE_UPSTREAM = "https://ktkwmsapnouyulleyj.supabase.co";
+const SUPABASE_UPSTREAM = "https://ktkwmsapnouylulleiyj.supabase.co";
 
 export default {
   async fetch(request, env) {
