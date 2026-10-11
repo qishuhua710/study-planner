@@ -421,7 +421,9 @@ export default function CalendarPage() {
       registerAiProvider(aiProvider);
 
       const dateStr = dateKey(selectedDate);
-      const tasks = getTasks().filter((t) => t.status !== "done");
+      const tasks = getTasks()
+        .filter((t) => t.status !== "done")
+        .filter((t) => enabledModes.has(t.mode ?? "study"));
       if (tasks.length === 0) {
         toast.info("没有待办任务，无需排程");
         return;
@@ -763,13 +765,17 @@ export default function CalendarPage() {
         </button>
         {TASK_MODES.map((m) => {
           const active = enabledModes.has(m);
+          // 仅剩最后一个启用模式时禁止关闭，与设置页行为一致
+          const isLastEnabled = active && enabledModes.size === 1;
           return (
             <button
               key={m}
               onClick={() => toggleMode(m)}
               aria-pressed={active}
+              disabled={isLastEnabled}
+              title={isLastEnabled ? "至少保留一个模式" : undefined}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors disabled:opacity-50",
                 active
                   ? "bg-primary/10 text-primary ring-1 ring-primary/30"
                   : "bg-muted/60 text-muted-foreground hover:text-foreground",

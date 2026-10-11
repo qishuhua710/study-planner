@@ -6,10 +6,10 @@
  * - 静态资源（JS/CSS/字体/图标）：cache-first
  * - API 请求：network-first（不缓存以避免脏数据）
  *
- * 版本：v2
+ * 版本：v3
  */
 
-const CACHE_VERSION = "v2";
+const CACHE_VERSION = "v3";
 const STATIC_CACHE = `study-planner-static-${CACHE_VERSION}`;
 const PAGES_CACHE = `study-planner-pages-${CACHE_VERSION}`;
 

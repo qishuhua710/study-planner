@@ -156,7 +156,7 @@ export const STORAGE_KEYS = [
 
 /**
  * 清空当前用户的所有数据（恢复首次启动的种子状态）
- * - 清除当前用户的 8 个 localStorage key
+ * - 清除当前用户的 9 个 localStorage key
  * - 触发 storage 事件让其他打开的标签页同步刷新
  */
 export function clearAllData(): void {

@@ -251,11 +251,12 @@ export default function SettingsPage() {
         courses: payload.data.courses.length,
         sessions: payload.data.sessions.length,
         holidays: payload.data.holidays.length,
+        fitness: payload.data.fitness?.records.length ?? 0,
       };
       downloadBackup();
       showDataMessage(
         "success",
-        `已导出：任务 ${counts.tasks}、时间块 ${counts.timeBlocks}、课程 ${counts.courses}、课时 ${counts.sessions}、假期 ${counts.holidays}`,
+        `已导出：任务 ${counts.tasks}、时间块 ${counts.timeBlocks}、课程 ${counts.courses}、课时 ${counts.sessions}、假期 ${counts.holidays}、健身记录 ${counts.fitness}`,
       );
     } catch (err) {
       showDataMessage("error", `导出失败：${(err as Error).message}`);
@@ -486,7 +487,9 @@ export default function SettingsPage() {
         </h3>
         <div className="space-y-2">
           {TASK_MODES.map((m: TaskMode) => {
-            const on = enabledModes.has(m);
+            // mounted 前不显示真实开关状态，避免关闭过模式时刷新瞬间"全亮"闪烁
+            const on = mounted && enabledModes.has(m);
+            const isLastOn = mounted && enabledModes.size === 1;
             const desc: Record<TaskMode, string> = {
               study: "课程、作业与学习任务",
               work: "工作任务与日程（看板开发中）",
@@ -509,9 +512,9 @@ export default function SettingsPage() {
                   aria-checked={on}
                   aria-label={`${MODE_LABELS[m]}模式`}
                   onClick={() => toggleMode(m)}
-                  disabled={!on && enabledModes.size === 1}
+                  disabled={!on && isLastOn}
                   title={
-                    !on && enabledModes.size === 1
+                    !on && isLastOn
                       ? "至少保留一个模式"
                       : undefined
                   }
