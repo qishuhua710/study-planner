@@ -38,11 +38,11 @@ export default function LoginPage() {
         {/* 标题 */}
         <div className="text-center">
           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <span className="text-lg font-bold">学</span>
+            <span className="text-lg font-bold">拾</span>
           </div>
           <h1 className="text-2xl font-semibold tracking-tight">欢迎回来</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            登录以同步你的学习日程
+            登录以同步你的日程与训练记录
           </p>
         </div>
 

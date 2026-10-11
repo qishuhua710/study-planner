@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 // 路由段配置：图片元数据
-export const alt = "学习日程管理";
+export const alt = "拾光日程";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -37,7 +37,7 @@ export default async function OpengraphImage() {
             boxShadow: "0 20px 60px rgba(59, 130, 246, 0.4)",
           }}
         >
-          学
+          拾
         </div>
 
         {/* 标题 */}
@@ -51,7 +51,7 @@ export default async function OpengraphImage() {
             textShadow: "0 4px 20px rgba(0,0,0,0.3)",
           }}
         >
-          学习日程管理
+          拾光日程
         </div>
 
         {/* 副标题 */}
@@ -66,7 +66,7 @@ export default async function OpengraphImage() {
             lineHeight: 1.4,
           }}
         >
-          个性化学习日程 · 日历 / 任务 / 计时器 / AI 排程
+          日历 / 任务 / 计时器 / 健身打卡 / AI 排程
         </div>
 
         {/* 底部装饰条 */}

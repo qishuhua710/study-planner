@@ -66,6 +66,8 @@
     { "source": "/schedule/", "destination": "/schedule/index.html" },
     { "source": "/timer", "destination": "/timer/index.html" },
     { "source": "/timer/", "destination": "/timer/index.html" },
+    { "source": "/fitness", "destination": "/fitness/index.html" },
+    { "source": "/fitness/", "destination": "/fitness/index.html" },
     { "source": "/settings", "destination": "/settings/index.html" },
     { "source": "/settings/", "destination": "/settings/index.html" },
     { "source": "/legal/about", "destination": "/legal/about/index.html" },

@@ -23,7 +23,10 @@ import {
   CloudOff,
   Loader2,
   Power,
+  Layers,
 } from "lucide-react";
+import { useEnabledModes } from "@/lib/mode-preferences";
+import { TASK_MODES, MODE_LABELS, type TaskMode } from "@/lib/tasks";
 import {
   isTauri,
   getAutostartEnabled,
@@ -121,6 +124,8 @@ function TimeField({
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
+  // 模式开关（学习 / 工作 / 健身）
+  const { enabled: enabledModes, toggleMode } = useEnabledModes();
   // 防止 SSR/CSR 不匹配：next-themes 客户端 hydrate 后 theme 才有值
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -472,6 +477,63 @@ export default function SettingsPage() {
             </button>
           ))}
         </div>
+      </Card>
+
+      {/* 模式开关（学习 / 工作 / 健身） */}
+      <Card className="p-5">
+        <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold">
+          <Layers className="h-4 w-4" /> 模式开关
+        </h3>
+        <div className="space-y-2">
+          {TASK_MODES.map((m: TaskMode) => {
+            const on = enabledModes.has(m);
+            const desc: Record<TaskMode, string> = {
+              study: "课程、作业与学习任务",
+              work: "工作任务与日程（看板开发中）",
+              fitness: "健身打卡与训练记录",
+            };
+            return (
+              <div
+                key={m}
+                className="flex items-center justify-between rounded-md border bg-muted/10 px-3 py-2.5"
+              >
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{MODE_LABELS[m]}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {desc[m]}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={on}
+                  aria-label={`${MODE_LABELS[m]}模式`}
+                  onClick={() => toggleMode(m)}
+                  disabled={!on && enabledModes.size === 1}
+                  title={
+                    !on && enabledModes.size === 1
+                      ? "至少保留一个模式"
+                      : undefined
+                  }
+                  className={cn(
+                    "relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-50",
+                    on ? "bg-primary" : "bg-muted-foreground/30",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform",
+                      on ? "translate-x-5" : "translate-x-0.5",
+                    )}
+                  />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground">
+          开关控制日历页显示哪些模式的任务；关闭的模式不会出现在日历和智能排程中。
+        </p>
       </Card>
 
       {/* 桌面应用（仅 Tauri 环境显示） */}

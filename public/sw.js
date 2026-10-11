@@ -20,6 +20,7 @@ const PRECACHE_URLS = [
   "/tasks/",
   "/schedule/",
   "/timer/",
+  "/fitness/",
   "/settings/",
   "/login/",
   "/register/",

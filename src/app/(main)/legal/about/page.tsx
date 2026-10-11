@@ -6,16 +6,16 @@ export default function AboutPage() {
       <header className="space-y-2">
         <h1 className="text-2xl font-bold tracking-tight">关于本站</h1>
         <p className="text-muted-foreground">
-          一个为学生设计的轻量学习日程管理工具。
+          一个为学习、工作与健身人群设计的轻量日程管理工具。
         </p>
       </header>
 
       <Section title="项目初衷" icon={<Heart className="h-4 w-4" />}>
         <p>
-          本站（学习日程管理 / Study Planner）致力于解决学生群体在学习过程中遇到的
+          本站（拾光日程 / Study Planner）致力于解决学习、工作与健身人群在时间管理中遇到的
           <strong>课程多、任务杂、时间碎</strong>等痛点。
-          通过日历、任务、番茄钟、智能排程四大模块的协同，
-          帮助用户把"应该学什么"和"什么时候学"打通。
+          通过日历、任务、番茄钟、健身打卡、智能排程等模块的协同，
+          帮助用户把"该做什么"和"什么时候做"打通。
         </p>
         <p>
           我们坚持"轻量、本地优先、可选 AI"的理念：核心功能完全离线可用，

@@ -5,6 +5,7 @@
  */
 
 import { userStorage, notifyDataChanged } from "./user-storage";
+import type { TaskMode } from "./tasks";
 
 export interface TimeBlock {
   id: string;
@@ -12,6 +13,7 @@ export interface TimeBlock {
   startTime: string; // "yyyy-MM-dd HH:mm"
   endTime: string; // "yyyy-MM-dd HH:mm"
   taskId?: string; // 关联任务（可选）
+  mode?: TaskMode; // 未设置时按 "study" 处理；关联任务时继承任务 mode
   color?: string; // 自定义颜色
   createdAt: string;
 }

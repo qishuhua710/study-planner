@@ -32,9 +32,16 @@ import {
   setCategories,
   type Category,
 } from "./categories";
+import {
+  getFitnessExercises,
+  getFitnessRecords,
+  setFitnessData,
+  type FitnessExercise,
+  type FitnessRecord,
+} from "./fitness";
 import { userStorage } from "./user-storage";
 
-export const BACKUP_VERSION = 2;
+export const BACKUP_VERSION = 3;
 
 export interface BackupPayload {
   version: number;
@@ -47,6 +54,10 @@ export interface BackupPayload {
     holidays: Holiday[];
     periodTimes: ReturnType<typeof getPeriodTimes>;
     categories: Category[];
+    fitness?: {
+      exercises: FitnessExercise[];
+      records: FitnessRecord[];
+    };
   };
 }
 
@@ -63,6 +74,10 @@ export function exportAllData(): BackupPayload {
       holidays: getHolidays(),
       periodTimes: getPeriodTimes(),
       categories: getCategories(),
+      fitness: {
+        exercises: getFitnessExercises(),
+        records: getFitnessRecords(),
+      },
     },
   };
 }
@@ -119,6 +134,10 @@ export function importAllData(payload: BackupPayload): void {
   if (payload.data.categories) {
     setCategories(payload.data.categories);
   }
+  // v2 备份可能不含 fitness，缺失则保留当前健身数据
+  if (payload.data.fitness) {
+    setFitnessData(payload.data.fitness);
+  }
 }
 
 // 所有数据持久化的 base localStorage key（清空数据用）
@@ -132,6 +151,7 @@ export const STORAGE_KEYS = [
   "study-planner:period-times",
   "study-planner:day-notes",
   "study-planner:categories",
+  "study-planner:fitness-data",
 ] as const;
 
 /**

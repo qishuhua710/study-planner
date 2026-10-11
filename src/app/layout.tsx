@@ -6,20 +6,20 @@ import { Providers } from "./providers";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "学习日程管理",
-  description: "个性化学习日程管理 PWA — 日历 + 任务 + 计时器 + 学习辅助",
+  title: "拾光日程",
+  description: "个性化日程管理 PWA — 日历 + 任务 + 计时器 + 健身打卡 + AI 排程",
   manifest: "/manifest.json",
   openGraph: {
-    title: "学习日程管理",
-    description: "个性化学习日程管理 PWA — 日历 + 任务 + 计时器 + 学习辅助",
+    title: "拾光日程",
+    description: "个性化日程管理 PWA — 日历 + 任务 + 计时器 + 健身打卡 + AI 排程",
     type: "website",
     locale: "zh_CN",
-    siteName: "学习日程",
+    siteName: "拾光日程",
   },
   twitter: {
     card: "summary_large_image",
-    title: "学习日程管理",
-    description: "个性化学习日程管理 PWA",
+    title: "拾光日程",
+    description: "个性化日程管理 PWA",
   },
   icons: {
     icon: [

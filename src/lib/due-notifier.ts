@@ -83,7 +83,7 @@ export async function promptDueNotification(summary: DueNotificationSummary) {
     );
   }
 
-  new Notification("📋 学习日程 · 任务提醒", {
+  new Notification("📋 拾光日程 · 任务提醒", {
     body: lines.join("\n"),
     tag: "study-planner-due-daily", // 同 tag 只保留一条
   });

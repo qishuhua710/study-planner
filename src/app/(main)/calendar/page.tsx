@@ -41,7 +41,8 @@ import {
   Bot,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getTasks } from "@/lib/tasks";
+import { getTasks, TASK_MODES, MODE_LABELS } from "@/lib/tasks";
+import { useEnabledModes } from "@/lib/mode-preferences";
 import {
   getCourses,
   getSessions,
@@ -157,6 +158,10 @@ export default function CalendarPage() {
 
   // ==================== 数据计算 ====================
 
+  // 模式筛选（学习 / 工作 / 健身，可多选）
+  const { enabled: enabledModes, toggleMode, setAll } = useEnabledModes();
+  const allModesOn = enabledModes.size === TASK_MODES.length;
+
   // 当前视图的日期范围
   const viewDays = useMemo(() => {
     if (view === "month") {
@@ -187,6 +192,8 @@ export default function CalendarPage() {
     const tasks = getTasks();
     for (const t of tasks) {
       if (!t.dueDate) continue;
+      // 模式筛选：未开启的模式不显示
+      if (!enabledModes.has(t.mode ?? "study")) continue;
       // 默认按优先级
       let color =
         t.priority === "high"
@@ -223,9 +230,9 @@ export default function CalendarPage() {
     }
 
     return map;
-    // refreshKey 触发重算（创建/编辑任务后）
+    // refreshKey 触发重算（创建/编辑任务后）；enabledModes 触发模式筛选重算
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshKey]);
+  }, [refreshKey, enabledModes]);
 
   // 当天课程
   const selectedDayCourses = useMemo(() => {
@@ -256,10 +263,15 @@ export default function CalendarPage() {
         ...b,
         linkedTask: b.taskId ? taskMap.get(b.taskId) : undefined,
       }))
+      .filter((b) => {
+        // 模式筛选：块自身 mode 优先，其次继承关联任务，默认 study
+        const m = b.mode ?? b.linkedTask?.mode ?? "study";
+        return enabledModes.has(m);
+      })
       .sort((a, b) => a.startTime.localeCompare(b.startTime));
     // refreshKey 触发重算
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate, refreshKey]);
+  }, [selectedDate, refreshKey, enabledModes]);
 
   // AI 排程结果
   const [aiSuggestions, setAiSuggestions] = useState<SuggestedBlock[]>([]);
@@ -272,17 +284,19 @@ export default function CalendarPage() {
   const suggestions: SuggestedBlock[] = useMemo(() => {
     if (!selectedDate || !showSuggestion) return [];
     if (useAi) return []; // 用 AI 模式时，本地建议不用
-    const tasks: TaskForScheduling[] = getTasks().map((t) => ({
-      id: t.id,
-      title: t.title,
-      priority: t.priority,
-      status: t.status,
-      estimatedMinutes: 30,
-    }));
+    const tasks: TaskForScheduling[] = getTasks()
+      .filter((t) => enabledModes.has(t.mode ?? "study"))
+      .map((t) => ({
+        id: t.id,
+        title: t.title,
+        priority: t.priority,
+        status: t.status,
+        estimatedMinutes: 30,
+      }));
     return suggestSchedule(selectedDate, tasks);
     // refreshKey 触发重算
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate, showSuggestion, useAi, refreshKey]);
+  }, [selectedDate, showSuggestion, useAi, refreshKey, enabledModes]);
 
   const selectedEvents = selectedDate
     ? eventsByDate.get(dateKey(selectedDate)) ?? []
@@ -731,6 +745,46 @@ export default function CalendarPage() {
             </button>
           </div>
         </div>
+      </div>
+
+      {/* 模式筛选：多选（学习 / 工作 / 健身） */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        <button
+          onClick={() => setAll(true)}
+          aria-pressed={allModesOn}
+          className={cn(
+            "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+            allModesOn
+              ? "bg-foreground text-background"
+              : "bg-muted/60 text-muted-foreground hover:text-foreground",
+          )}
+        >
+          全部
+        </button>
+        {TASK_MODES.map((m) => {
+          const active = enabledModes.has(m);
+          return (
+            <button
+              key={m}
+              onClick={() => toggleMode(m)}
+              aria-pressed={active}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                active
+                  ? "bg-primary/10 text-primary ring-1 ring-primary/30"
+                  : "bg-muted/60 text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <span
+                className={cn(
+                  "h-1.5 w-1.5 rounded-full",
+                  active ? "bg-primary" : "bg-muted-foreground/40",
+                )}
+              />
+              {MODE_LABELS[m]}
+            </button>
+          );
+        })}
       </div>
 
       <div className="grid gap-4 lg:gap-5 lg:grid-cols-[1fr_320px]">

@@ -7,6 +7,17 @@
 import { mockTasks, type Priority, type Status } from "./mock-data";
 import { userStorage, notifyDataChanged } from "./user-storage";
 
+/** 任务所属模式：学习 / 工作 / 健身 */
+export type TaskMode = "study" | "work" | "fitness";
+
+export const TASK_MODES: TaskMode[] = ["study", "work", "fitness"];
+
+export const MODE_LABELS: Record<TaskMode, string> = {
+  study: "学习",
+  work: "工作",
+  fitness: "健身",
+};
+
 export interface Task {
   id: string;
   title: string;
@@ -18,6 +29,7 @@ export interface Task {
   category: string; // 分类名称（兼容旧数据，显示用）
   tags: string[];
   estimatedMinutes?: number;
+  mode?: TaskMode; // 未设置时按 "study" 处理（兼容旧数据）
   createdAt: string;
   updatedAt: string;
 }
@@ -29,7 +41,9 @@ function readAll(): Task[] {
   try {
     const raw = userStorage.getItem(KEY);
     if (!raw) return toTasks(mockTasks);
-    return JSON.parse(raw) as Task[];
+    const list = JSON.parse(raw) as Task[];
+    // 旧数据迁移：读取时补默认 mode
+    return list.map((t) => ({ ...t, mode: t.mode ?? "study" }));
   } catch {
     return toTasks(mockTasks);
   }
@@ -51,6 +65,7 @@ function toTasks(
   const now = new Date().toISOString();
   return mocks.map((m) => ({
     ...m,
+    mode: "study" as TaskMode,
     createdAt: now,
     updatedAt: now,
   }));
@@ -81,6 +96,7 @@ export function addTask(
   const now = new Date().toISOString();
   const newTask: Task = {
     ...task,
+    mode: task.mode ?? "study",
     id: `t-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     createdAt: now,
     updatedAt: now,

@@ -10,6 +10,9 @@ import {
   updateTask,
   generateTaskId,
   type Task,
+  type TaskMode,
+  TASK_MODES,
+  MODE_LABELS,
 } from "@/lib/tasks";
 import {
   getCategories,
@@ -43,6 +46,7 @@ export function TaskDialog({
   const [dueDate, setDueDate] = useState("");
   const [categoryId, setCategoryId] = useState<string | undefined>(undefined);
   const [tagsText, setTagsText] = useState("");
+  const [mode, setMode] = useState<TaskMode>("study");
 
   // 分类管理（新建分类时临时弹出色板）
   const [categories, setCategories] = useState<Category[]>([]);
@@ -63,6 +67,7 @@ export function TaskDialog({
       setDueDate(task.dueDate ?? "");
       setCategoryId(task.categoryId);
       setTagsText(task.tags.join(", "));
+      setMode(task.mode ?? "study");
     } else {
       setTitle("");
       setDescription("");
@@ -71,6 +76,7 @@ export function TaskDialog({
       setDueDate(defaultDate ?? "");
       setCategoryId(undefined);
       setTagsText("");
+      setMode("study");
     }
     // 重置新建分类 UI
     setShowNewCategory(false);
@@ -105,6 +111,7 @@ export function TaskDialog({
         categoryId,
         category: categoryName,
         tags,
+        mode,
       });
       toast.success("任务已更新");
     } else {
@@ -117,6 +124,7 @@ export function TaskDialog({
         categoryId,
         category: categoryName,
         tags,
+        mode,
       });
       toast.success("任务已创建");
     }
@@ -311,6 +319,26 @@ export function TaskDialog({
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">模式</Label>
+            <div className="flex gap-1">
+              {TASK_MODES.map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => setMode(m)}
+                  className={`flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
+                    mode === m
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted/40 text-muted-foreground hover:bg-muted"
+                  }`}
+                >
+                  {MODE_LABELS[m]}
+                </button>
+              ))}
             </div>
           </div>
 

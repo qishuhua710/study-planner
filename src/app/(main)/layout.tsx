@@ -8,6 +8,7 @@ import {
   CheckSquare,
   Timer,
   BookOpen,
+  Dumbbell,
   Settings,
   LogOut,
 } from "lucide-react";
@@ -28,6 +29,7 @@ const navItems = [
   { href: "/schedule", label: "课表", icon: BookOpen },
   { href: "/tasks", label: "任务", icon: CheckSquare },
   { href: "/timer", label: "计时器", icon: Timer },
+  { href: "/fitness", label: "健身", icon: Dumbbell },
   { href: "/settings", label: "设置", icon: Settings },
 ];
 
@@ -128,7 +130,7 @@ export default function MainLayout({
             className="mr-auto flex items-center gap-2 text-base font-semibold tracking-tight"
           >
             <span className="h-2.5 w-2.5 rounded-full bg-primary" />
-            <span className="hidden xs:inline sm:inline">学习日程</span>
+            <span className="hidden xs:inline sm:inline">拾光日程</span>
             {(todayTaskCount > 0 || todayTimeBlockCount > 0) && (
               <span className="ml-1 hidden items-center gap-1.5 text-[11px] font-normal text-muted-foreground sm:inline-flex">
                 {todayTaskCount > 0 && (
@@ -197,7 +199,7 @@ export default function MainLayout({
         <footer className="border-t bg-background/40">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-5 text-xs text-muted-foreground sm:px-6">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-              <span>© 2026 学习日程管理</span>
+              <span>© 2026 拾光日程</span>
               <span aria-hidden="true">·</span>
               <span>非商业个人项目</span>
             </div>
