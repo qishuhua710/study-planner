@@ -129,6 +129,14 @@ export function notifyDataChanged() {
 
 /* ============ 云同步（异步，最佳努力） ============ */
 
+// 网络被墙/离线时云同步会持续失败：只打一次日志，之后静默重试，避免控制台刷屏
+let syncErrorLogged = false;
+function logSyncErrorOnce(scope: string, e: unknown): void {
+  if (syncErrorLogged) return;
+  syncErrorLogged = true;
+  console.error(`[user-storage] ${scope}（本地数据不受影响，后续失败静默重试）`, e);
+}
+
 function scheduleCloudSync(baseKey: string, value: string) {
   if (!currentUserId) return;
   pendingSync.set(baseKey, value);
@@ -189,7 +197,7 @@ async function flushPending(): Promise<void> {
         .eq("key", k);
     }
   } catch (e) {
-    console.error("[user-storage] 云同步失败", e);
+    logSyncErrorOnce("云同步失败", e);
   }
 }
 
@@ -213,7 +221,8 @@ async function pullAllFromCloud(): Promise<void> {
     }
     // 通知数据层刷新
     notifyDataChanged();
+    syncErrorLogged = false; // 恢复后重置，下次失败仍会提示一次
   } catch (e) {
-    console.error("[user-storage] 拉取云端数据失败", e);
+    logSyncErrorOnce("拉取云端数据失败", e);
   }
 }
